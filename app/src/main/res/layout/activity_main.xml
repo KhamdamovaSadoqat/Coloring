@@ -1,27 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.main.MainFragment">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <com.example.coloring.ui.custom.GenerateImage
-            android:id="@+id/iv_first"
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                tools:context=".ui.main.MainFragment">
 
-<!--        <ImageView-->
-<!--            android:id="@+id/iv_first"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:contentDescription="@string/bitmap" />-->
+                <Spinner
+                    android:id="@+id/sp_algorithm1"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_transparent_8"
+                    android:spinnerMode="dropdown"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
+                 <com.example.coloring.ui.custom.GenerateImage
+                    android:id="@+id/gi_first"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp" />
+            </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                tools:context=".ui.main.MainFragment">
+
+                <Spinner
+                    android:id="@+id/sp_algorithm2"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_transparent_8"
+                    android:padding="15dp"
+                    android:spinnerMode="dropdown"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/gi_first" />
+
+                <!--            <ImageView-->
+                <!--                android:layout_width="35dp"-->
+                <!--                android:layout_height="35dp"-->
+                <!--                android:layout_margin="16dp"-->
+                <!--                android:layout_weight="1"-->
+                <!--                app:layout_constraintRight_toRightOf="parent"-->
+                <!--                app:layout_constraintTop_toBottomOf="@id/gi_first"-->
+                <!--                app:srcCompat="@drawable/ic_spinner" />-->
+
+                <com.example.coloring.ui.custom.GenerateImage
+                    android:id="@+id/gi_second"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_margin="16dp"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_size"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_weight="2"
+                    android:text="@string/size"
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_generate"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="2"
+                    android:text="@string/generate"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/speed"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+                <SeekBar
+                    android:id="@+id/sp_speed"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="4"
+                    android:max="100"
+                    android:progress="100"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
 </layout>

@@ -3,10 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/projects/Android/Coloring/app/src/main/res/drawable-v24/bg_left_8.xml" value="0.2657407407407407" />
+        <entry key="..\:/projects/Android/Coloring/app/src/main/res/drawable-v24/bg_top_8.xml" value="0.2657407407407407" />
+        <entry key="..\:/projects/Android/Coloring/app/src/main/res/drawable-v24/bg_transparent_8.xml" value="0.2703125" />
+        <entry key="..\:/projects/Android/Coloring/app/src/main/res/drawable-v24/ic_spinner.xml" value="0.2703125" />
+        <entry key="..\:/projects/Android/Coloring/app/src/main/res/drawable/bg_right_8.xml" value="0.2657407407407407" />
+        <entry key="..\:/projects/Android/Coloring/app/src/main/res/drawable/dialog_size.xml" value="0.2657407407407407" />
         <entry key="..\:/projects/Android/Coloring/app/src/main/res/drawable/pixel.xml" value="0.1" />
         <entry key="..\:/projects/Android/Coloring/app/src/main/res/drawable/pixel_black.xml" value="0.1" />
         <entry key="..\:/projects/Android/Coloring/app/src/main/res/drawable/pixel_white.xml" value="0.19814814814814816" />
-        <entry key="..\:/projects/Android/Coloring/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/projects/Android/Coloring/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/projects/Android/Coloring/app/src/main/res/layout/dialog_size.xml" value="0.264" />
         <entry key="..\:/projects/Android/Coloring/app/src/main/res/layout/fragment_main.xml" value="0.24010416666666667" />
       </map>
     </option>

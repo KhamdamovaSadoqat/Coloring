@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">Coloring</string>
-    
+
     <string name="bitmap">bitmap</string>
+    <string name="size">Size</string>
+    <string name="generate">Gnerate</string>
+    <string name="speed">Speed</string>
+    <string name="size_x">size X</string>
+    <string name="x">x</string>
+    <string name="size_y">size y</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 </resources>
