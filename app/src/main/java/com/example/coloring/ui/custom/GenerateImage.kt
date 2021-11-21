@@ -26,6 +26,11 @@ class GenerateImage @JvmOverloads constructor(
     private val dp = resources.displayMetrics.density
     private var mBitmapWhite: Bitmap? = null
     private var mBitmapBlack: Bitmap? = null
+    private var mBitmapBlue: Bitmap? = null
+    private var mBitmapRed: Bitmap? = null
+    private var mBitmapYellow: Bitmap? = null
+    private var mBitmapGreen: Bitmap? = null
+    private var mBitmapPurple: Bitmap? = null
     private var mAnimatedValue = 100
     private var mIsAnimationStart = false
     private var sizeX = 0
@@ -33,17 +38,16 @@ class GenerateImage @JvmOverloads constructor(
     private var customSizeX = 0
     private var customSizeY = 0
     private var sizeBitmap = 0F
-    private lateinit var array: Array<Array<Boolean>>
+    private lateinit var array: Array<Array<Int>>
 
     init {
-        mBitmapWhite = ContextCompat.getDrawable(
-            context,
-            R.drawable.pixel_white
-        )?.toBitmap()
-        mBitmapBlack = ContextCompat.getDrawable(
-            context,
-            R.drawable.pixel_black
-        )?.toBitmap()
+        mBitmapWhite = ContextCompat.getDrawable(context, R.drawable.pixel_white)?.toBitmap()
+        mBitmapBlack = ContextCompat.getDrawable(context, R.drawable.pixel_black)?.toBitmap()
+        mBitmapBlue = ContextCompat.getDrawable(context, R.drawable.pixel_blue)?.toBitmap()
+        mBitmapRed = ContextCompat.getDrawable(context, R.drawable.pixel_red)?.toBitmap()
+        mBitmapYellow = ContextCompat.getDrawable(context, R.drawable.pixel_yellow)?.toBitmap()
+        mBitmapGreen = ContextCompat.getDrawable(context, R.drawable.pixel_green)?.toBitmap()
+        mBitmapPurple = ContextCompat.getDrawable(context, R.drawable.pixel_purple)?.toBitmap()
     }
 
     override fun onAnimationUpdate(animation: ValueAnimator?) {
@@ -54,8 +58,6 @@ class GenerateImage @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         if (mIsAnimationStart) drawAnimatedPixel(canvas)
-//        else drawCircle(canvas)
-
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -67,42 +69,71 @@ class GenerateImage @JvmOverloads constructor(
         )
         customSizeX = parentWidth
         customSizeY = parentHeight
-
-        Log.d("----------", "onMeasure: w: $parentHeight")
-        Log.d("----------", "onMeasure: h: $parentWidth")
-
     }
 
-    fun startAnimation(array: Array<Array<Boolean>>, sizeBitmap: Float) {
+    fun startAnimation(array: Array<Array<Int>>, sizeBitmap: Float) {
         this.array = array
         this.sizeBitmap = sizeBitmap
         sizeX = (customSizeX / sizeBitmap).toInt()
         sizeY = (customSizeY / sizeBitmap).toInt()
-        mValueAnimator.duration = 1000
+        Log.d("----------", "startAnimation: x: $sizeX y: $sizeY")
+        mValueAnimator.duration = 100
         mValueAnimator.interpolator = AccelerateDecelerateInterpolator()
         mValueAnimator.addUpdateListener(this)
         mIsAnimationStart = true
         mValueAnimator.start()
     }
 
-
     //taking by 10dp for each pixel
     private fun drawAnimatedPixel(canvas: Canvas?) {
         for (x in 0 until sizeX) {
             for (y in 0 until sizeY) {
                 mPaint.alpha = 255
-                if (array[x][y]) canvas?.drawBitmap(
-                    getBitmap(sizeBitmap.toInt(), mBitmapWhite!!)!!,
-                    x * sizeBitmap,
-                    y * sizeBitmap,
-                    mPaint
-                )
-                else canvas?.drawBitmap(
-                    getBitmap(sizeBitmap.toInt(), mBitmapBlack!!)!!,
-                    x * sizeBitmap,
-                    y * sizeBitmap,
-                    mPaint
-                )
+
+                when (array[x][y]) {
+                    0 -> canvas?.drawBitmap(
+                        mBitmapBlack!!,
+                        x * sizeBitmap,
+                        y * sizeBitmap,
+                        mPaint
+                    )
+                    1 -> canvas?.drawBitmap(
+                        mBitmapWhite!!,
+                        x * sizeBitmap,
+                        y * sizeBitmap,
+                        mPaint
+                    )
+                    2 -> canvas?.drawBitmap(
+                        mBitmapBlue!!,
+                        x * sizeBitmap,
+                        y * sizeBitmap,
+                        mPaint
+                    )
+                    3 -> canvas?.drawBitmap(
+                        mBitmapRed!!,
+                        x * sizeBitmap,
+                        y * sizeBitmap,
+                        mPaint
+                    )
+                    4 -> canvas?.drawBitmap(
+                        mBitmapYellow!!,
+                        x * sizeBitmap,
+                        y * sizeBitmap,
+                        mPaint
+                    )
+                    5 -> canvas?.drawBitmap(
+                        mBitmapGreen!!,
+                        x * sizeBitmap,
+                        y * sizeBitmap,
+                        mPaint
+                    )
+                    6 -> canvas?.drawBitmap(
+                        mBitmapPurple!!,
+                        x * sizeBitmap,
+                        y * sizeBitmap,
+                        mPaint
+                    )
+                }
 
             }
         }
@@ -110,9 +141,4 @@ class GenerateImage @JvmOverloads constructor(
             mIsAnimationStart = false
         }
     }
-
-    private fun getBitmap(size: Int, bitmap: Bitmap): Bitmap? {
-        return Bitmap.createScaledBitmap(bitmap, size, size, true)
-    }
-
 }

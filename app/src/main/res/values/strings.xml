@@ -10,4 +10,14 @@
     <string name="size_y">size y</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+
+    <string name="black">Black</string>
+    <string name="white">White</string>
+    <string name="blue">Blue</string>
+    <string name="yellow">Yellow</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="purple">Purple</string>
+    <string name="icon">icon</string>
+
 </resources>
