@@ -1,22 +1,18 @@
 package com.example.coloring.ui.main
 
 import android.annotation.SuppressLint
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.databinding.DataBindingUtil
 import com.example.coloring.R
 import com.example.coloring.databinding.ActivityMainBinding
-import android.graphics.Point
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.WindowInsets
-import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import com.example.coloring.databinding.DialogSizeBinding
+import com.example.coloring.ui.model.Coordinates
 import kotlin.collections.ArrayList
 
 
@@ -25,14 +21,29 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var resultDialog: AlertDialog? = null
     private lateinit var bindingDialog: DialogSizeBinding
+
+    //custom view width and height
     private var widthFirst: Int = 0
     private var heightFirst: Int = 0
+
+    //initial width and height of custom view
     private var widthInitial: Int = 0
     private var heightInitial: Int = 0
-    private var bitmapSize: Int = 20
-    private var x: Int =0
-    private var y: Int =0
 
+    //bitmap size in that custom view
+    private var bitmapSize: Int = 20
+
+    //pressed coordinates of x and y in First custom view
+    private var x: Int = 0
+    private var y: Int = 0
+
+    //size of custom view -- counts of bitmpas
+    private var x1: Int = 0
+    private var y1: Int = 0
+    private lateinit var arrayOfFirst: Array<Array<Boolean>>
+    private lateinit var arrayOfSecond: Array<Array<Boolean>>
+    private lateinit var array: ArrayList<Coordinates>
+    private lateinit var arrayContains: ArrayList<Coordinates>
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -42,44 +53,23 @@ class MainActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         bindingDialog = DialogSizeBinding.inflate(LayoutInflater.from(this))
-
-        binding.giFirst.setOnTouchListener { view, motionEvent ->
-            val locations = IntArray(2)
-            view.getLocationOnScreen(locations)
-            Log.d("----------", "onCreate: view: ${view.getLocationOnScreen(locations)}")
-            Log.d("----------", "onCreate: loc: [0] = ${locations[0]}")
-            Log.d("----------", "onCreate: loc: [1] = ${locations[1]}")
-            Log.d("----------", "onCreate: me:   $motionEvent")
-
-            x = motionEvent.x.toInt() % 40
-            y = motionEvent.y.toInt() % 40
-
-            Log.d("----------", "onCreate: x: $x  y: $y")
-
-            false
-        }
-
-    }
-
-    override fun onResume() {
-        super.onResume()
+        arrayContains = arrayListOf()
+        array = arrayListOf()
 
         binding.btnGenerate.setOnClickListener {
-            val x1 = binding.giFirst.measuredWidth / bitmapSize
-            val y1 = binding.giFirst.measuredHeight / bitmapSize
-            val x2 = binding.giSecond.measuredWidth / bitmapSize
-            val y2 = binding.giSecond.measuredHeight / bitmapSize
+            x1 = binding.giFirst.measuredWidth / bitmapSize
+            y1 = binding.giFirst.measuredHeight / bitmapSize
 //            Log.d("----------", "onResume: x1: $x1")
 //            Log.d("----------", "onResume: y1: $y1")
 //            Log.d("----------", "onResume: x2: $x2")
 //            Log.d("----------", "onResume: y2: $y2")
 //            Log.d("----------", "onResume: ww: ${binding.giFirst.measuredWidth}")
 //            Log.d("----------", "onResume: hh: ${binding.giFirst.measuredHeight}")
-            binding.giFirst.startAnimation(generateImage(x1, y1), bitmapSize.toFloat())
-            binding.giSecond.startAnimation(generateImage(x2, y2), bitmapSize.toFloat())
+            arrayOfFirst = generateImage(x1, y1)
+            arrayOfSecond = generateImage(x1, y1)
+            binding.giFirst.startAnimation(arrayOfFirst, bitmapSize.toFloat())
+            binding.giSecond.startAnimation(arrayOfSecond, bitmapSize.toFloat())
         }
-        widthFirst = binding.giFirst.measuredWidth
-        heightFirst = binding.giFirst.measuredHeight
         binding.btnSize.setOnClickListener {
             dismissDialog()
             if (bindingDialog.root.parent != null) {
@@ -87,6 +77,64 @@ class MainActivity : AppCompatActivity() {
             }
             showDialog()
         }
+
+        binding.giFirst.setOnTouchListener { _, motionEvent ->
+            Log.d("----------", "onCreate: me:   $motionEvent")
+
+            x = motionEvent.x.toInt() / bitmapSize
+            y = motionEvent.y.toInt() / bitmapSize
+            arrayContains.add(Coordinates(x, y))
+            array.add(Coordinates(x, y))
+            Log.d("----------", "onCreate: x: $x  y: $y")
+            addToArray(x, y, arrayOfFirst, array, arrayContains)
+            false
+        }
+
+    }
+
+    private fun addToArray(
+        x: Int,
+        y: Int,
+        arrayOfBoolens: Array<Array<Boolean>>,
+        array: ArrayList<Coordinates>,
+        arrayContains: ArrayList<Coordinates>
+    ) {
+
+        while (array.isNotEmpty()) {
+            val initial: Boolean = arrayOfBoolens[array[0].x][array[0].y]//white or black
+            //top
+            if (y - 1 > -1)
+                if (initial == arrayOfBoolens[x][y - 1] && !arrayContains.contains(Coordinates(x, y-1))) {
+                    array.add(Coordinates(x, y - 1))
+                    arrayContains.add(Coordinates(x, y - 1))
+                    Log.d("----------", "addToArray:    top: [$x,${y-1}]")
+                }
+            //bottom
+            if (y + 1 < y1)
+                if (initial == arrayOfBoolens[x][y + 1] && !arrayContains.contains(Coordinates(x, y+1))){
+                    array.add(Coordinates(x, y + 1))
+                    arrayContains.add(Coordinates(x, y + 1))
+                    Log.d("----------", "addToArray: bottom: [$x,${y+1}]")
+                }
+            //left
+            if (x - 1 > -1)
+                if (initial == arrayOfBoolens[x - 1][y] && !arrayContains.contains(Coordinates(x-1, y))){
+                    array.add(Coordinates(x - 1, y))
+                    arrayContains.add(Coordinates(x - 1, y))
+                    Log.d("----------", "addToArray:   left: [${x-1},$y]")
+                }
+            //right
+            if (x + 1 < x1)
+                if (initial == arrayOfBoolens[x + 1][y] && !arrayContains.contains(Coordinates(x+1, y))){
+                    array.add(Coordinates(x + 1, y))
+                    arrayContains.add(Coordinates(x + 1, y))
+                    Log.d("----------", "addToArray:  right: [${x+1},$y]")
+                }
+
+            array.remove(Coordinates(x, y))
+            Log.d("----------", "addToArray: array: $array [$x,$y]")
+        }
+//        arrayContains.clear()
     }
 
     private fun generateImage(sizeX: Int, sizeY: Int): Array<Array<Boolean>> {
@@ -110,7 +158,7 @@ class MainActivity : AppCompatActivity() {
         val dp = resources.displayMetrics.density
         bindingDialog.btnOk.setOnClickListener {
             if (!bindingDialog.etSizeX.text.isNullOrEmpty() && !bindingDialog.etSizeY.text.isNullOrEmpty()) {
-                if(widthInitial==0 && heightInitial==0){
+                if (widthInitial == 0 && heightInitial == 0) {
                     widthInitial = binding.giFirst.measuredWidth
                     heightInitial = binding.giFirst.measuredHeight
                 }
@@ -119,18 +167,23 @@ class MainActivity : AppCompatActivity() {
                         .toInt() >= widthInitial
                 ) bindingDialog.etSizeX.error =
                     "Please choose smaller number under $widthInitial"
-                else{
+                else {
                     widthFirst = bindingDialog.etSizeX.text.toString().toInt()
                     if (bindingDialog.etSizeY.text.toString()
                             .toInt() >= heightInitial
                     ) {
                         bindingDialog.etSizeY.error =
                             "Please choose smaller number under $heightInitial"
-                    } else{
+                    } else {
                         heightFirst = bindingDialog.etSizeY.text.toString().toInt()
-                        if(widthFirst <= widthInitial && heightFirst <= heightInitial){
+                        if (widthFirst <= widthInitial && heightFirst <= heightInitial) {
                             val layout = LinearLayout.LayoutParams(widthFirst, heightFirst)
-                            layout.setMargins((16*dp).toInt(), (8*dp).toInt(), (16*dp).toInt(), 8)
+                            layout.setMargins(
+                                (16 * dp).toInt(),
+                                (8 * dp).toInt(),
+                                (16 * dp).toInt(),
+                                8
+                            )
                             binding.giFirst.layoutParams = layout
                             binding.giSecond.layoutParams = layout
                             dismissDialog()
@@ -139,7 +192,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        bindingDialog.btnCancel.setOnClickListener { dismissDialog()}
+        bindingDialog.btnCancel.setOnClickListener { dismissDialog() }
         resultDialog = AlertDialog.Builder(this)
             .setView(bindingDialog.root)
             .setCancelable(true)

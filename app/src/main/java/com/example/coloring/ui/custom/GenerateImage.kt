@@ -111,16 +111,6 @@ class GenerateImage @JvmOverloads constructor(
         }
     }
 
-    private fun drawPixel(canvas: Canvas?) {
-        for (x in 0..sizeX) {
-            for (y in 0..sizeY) {
-                if (array[x][y]) canvas?.drawBitmap(mBitmapWhite!!, x * 10F, y * 10F, mPaint)
-                else canvas?.drawBitmap(mBitmapBlack!!, x * 10F, y * 10F, mPaint)
-
-            }
-        }
-    }
-
     private fun getBitmap(size: Int, bitmap: Bitmap): Bitmap? {
         return Bitmap.createScaledBitmap(bitmap, size, size, true)
     }
