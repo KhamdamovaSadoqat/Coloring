@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
             if (arrayOfSecond[xPressedSecond][yPressedSecond] != secondReplacementColor) {
                 arrayContains.add(Coordinates(xPressedSecond, yPressedSecond))
                 arrayNeedToCheck.add(Coordinates(xPressedSecond, yPressedSecond))
-                arrayOfFirst = addToArray(
+                arrayOfSecond = addToArray(
                     arrayOfSecond,
                     arrayNeedToCheck,
                     arrayContains,
@@ -138,10 +138,22 @@ class MainActivity : AppCompatActivity() {
             binding.giSecond.layoutParams = layout
             Log.d("----------", "onCreate: generated x: $x y: $y")
             arrayOfFirst = generateImage(x, y)
-            arrayOfSecond = arrayOfFirst
+            arrayOfSecond = copy(arrayOfFirst)
             binding.giFirst.startAnimation(arrayOfFirst, bitmapSize.toFloat())
-            binding.giSecond.startAnimation(arrayOfFirst, bitmapSize.toFloat())
+            binding.giSecond.startAnimation(arrayOfSecond, bitmapSize.toFloat())
         }
+    }
+
+    private fun copy(list: Array<Array<Int>>): Array<Array<Int>>{
+        var array = arrayOf<Array<Int>>()
+        for (element in list) {
+            var arr = arrayOf<Int>()
+            for (yin in list[0].indices){
+                arr += element[yin]
+            }
+            array += arr
+        }
+        return array
     }
 
     fun print(list: Array<Array<Int>>) {
