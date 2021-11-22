@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     //bitmap size in that custom view
     private var bitmapSize: Int = 20
+    private var isGenerated: Boolean = false
 
     //pressed coordinates of x and y in First custom view
     private var xPressedFirst: Int = 0
@@ -65,52 +66,61 @@ class MainActivity : AppCompatActivity() {
         bindingDialog = DialogSizeBinding.inflate(LayoutInflater.from(this))
         arrayContains = arrayListOf()
         arrayNeedToCheck = arrayListOf()
+        arrayOfFirst = arrayOf(arrayOf())
+        arrayOfSecond = arrayOf(arrayOf())
         spinnerColor()
         setUp()
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    fun setUp(){
+    fun setUp() {
         binding.giFirst.setOnTouchListener { _, motionEvent ->
-            Log.d("----------", "onCreate: me:   $motionEvent")
+            if (isGenerated) {
+                Log.d("----------", "onCreate: me:   $motionEvent")
 
-            xPressedFirst = motionEvent.x.toInt() / bitmapSize
-            yPressedFirst = motionEvent.y.toInt() / bitmapSize
+                xPressedFirst = motionEvent.x.toInt() / bitmapSize
+                yPressedFirst = motionEvent.y.toInt() / bitmapSize
 
-            Log.d("----------", "onCreate: pressed x: $xPressedFirst y: $yPressedFirst")
-            Log.d("----------", "onCreate: x: ${xPressedFirst * bitmapSize} y: ${yPressedFirst * bitmapSize}")
-            Log.d("----------", "onCreate: x: ${motionEvent.x}  y: ${motionEvent.y}")
-
-            if (arrayOfFirst[xPressedFirst][yPressedFirst] != firstReplacementColor) {
-                arrayContains.add(Coordinates(xPressedFirst, yPressedFirst))
-                arrayNeedToCheck.add(Coordinates(xPressedFirst, yPressedFirst))
-                arrayOfFirst = addToArray(
-                    arrayOfFirst,
-                    arrayNeedToCheck,
-                    arrayContains,
-                    arrayOfFirst[xPressedFirst][yPressedFirst],
-                    firstReplacementColor
+                Log.d("----------", "onCreate: pressed x: $xPressedFirst y: $yPressedFirst")
+                Log.d(
+                    "----------",
+                    "onCreate: x: ${xPressedFirst * bitmapSize} y: ${yPressedFirst * bitmapSize}"
                 )
-                binding.giFirst.startAnimation(arrayOfFirst, bitmapSize.toFloat())
+                Log.d("----------", "onCreate: x: ${motionEvent.x}  y: ${motionEvent.y}")
+
+                if (arrayOfFirst[xPressedFirst][yPressedFirst] != firstReplacementColor) {
+                    arrayContains.add(Coordinates(xPressedFirst, yPressedFirst))
+                    arrayNeedToCheck.add(Coordinates(xPressedFirst, yPressedFirst))
+                    arrayOfFirst = addToArray(
+                        arrayOfFirst,
+                        arrayNeedToCheck,
+                        arrayContains,
+                        arrayOfFirst[xPressedFirst][yPressedFirst],
+                        firstReplacementColor
+                    )
+                    binding.giFirst.startAnimation(arrayOfFirst, bitmapSize.toFloat())
+                }
             }
             false
         }
 
         binding.giSecond.setOnTouchListener { _, motionEvent ->
-            xPressedSecond = motionEvent.x.toInt() / bitmapSize
-            yPressedSecond= motionEvent.y.toInt() / bitmapSize
+            if (isGenerated) {
+                xPressedSecond = motionEvent.x.toInt() / bitmapSize
+                yPressedSecond = motionEvent.y.toInt() / bitmapSize
 
-            if (arrayOfSecond[xPressedSecond][yPressedSecond] != secondReplacementColor) {
-                arrayContains.add(Coordinates(xPressedSecond, yPressedSecond))
-                arrayNeedToCheck.add(Coordinates(xPressedSecond, yPressedSecond))
-                arrayOfSecond = addToArray(
-                    arrayOfSecond,
-                    arrayNeedToCheck,
-                    arrayContains,
-                    arrayOfSecond[xPressedSecond][yPressedSecond],
-                    secondReplacementColor
-                )
-                binding.giSecond.startAnimation(arrayOfSecond, bitmapSize.toFloat())
+                if (arrayOfSecond[xPressedSecond][yPressedSecond] != secondReplacementColor) {
+                    arrayContains.add(Coordinates(xPressedSecond, yPressedSecond))
+                    arrayNeedToCheck.add(Coordinates(xPressedSecond, yPressedSecond))
+                    arrayOfSecond = addToArray(
+                        arrayOfSecond,
+                        arrayNeedToCheck,
+                        arrayContains,
+                        arrayOfSecond[xPressedSecond][yPressedSecond],
+                        secondReplacementColor
+                    )
+                    binding.giSecond.startAnimation(arrayOfSecond, bitmapSize.toFloat())
+                }
             }
             false
         }
@@ -127,7 +137,7 @@ class MainActivity : AppCompatActivity() {
             x = binding.giFirst.measuredWidth / bitmapSize
             y = binding.giFirst.measuredHeight / bitmapSize
             val dp = resources.displayMetrics.density
-            val layout = LinearLayout.LayoutParams(bitmapSize*x, bitmapSize*y)
+            val layout = LinearLayout.LayoutParams(bitmapSize * x, bitmapSize * y)
             layout.setMargins(
                 (16 * dp).toInt(),
                 (8 * dp).toInt(),
@@ -141,14 +151,15 @@ class MainActivity : AppCompatActivity() {
             arrayOfSecond = copy(arrayOfFirst)
             binding.giFirst.startAnimation(arrayOfFirst, bitmapSize.toFloat())
             binding.giSecond.startAnimation(arrayOfSecond, bitmapSize.toFloat())
+            isGenerated = true
         }
     }
 
-    private fun copy(list: Array<Array<Int>>): Array<Array<Int>>{
+    private fun copy(list: Array<Array<Int>>): Array<Array<Int>> {
         var array = arrayOf<Array<Int>>()
         for (element in list) {
             var arr = arrayOf<Int>()
-            for (yin in list[0].indices){
+            for (yin in list[0].indices) {
                 arr += element[yin]
             }
             array += arr
@@ -179,8 +190,6 @@ class MainActivity : AppCompatActivity() {
             Log.d("----------", "addToArray: x: $x  y: $y")
             Log.d("----------", "addToArray: color: $initialColor")
             arrayOfColors[x][y] = replacementColor
-
-
             //top
             if (y - 1 > -1)
                 if (initialColor == arrayOfColors[x][y - 1] && !arrayContains.contains(
@@ -321,13 +330,23 @@ class MainActivity : AppCompatActivity() {
                         .toInt() >= widthInitial
                 ) bindingDialog.etSizeX.error =
                     "Please choose smaller number under $widthInitial"
-                else {
+                else if (bindingDialog.etSizeX.text.toString()
+                        .toInt() < 20
+                ) {
+                    bindingDialog.etSizeX.error =
+                        "Please choose bigger number over 20"
+                } else {
                     widthFirst = bindingDialog.etSizeX.text.toString().toInt()
                     if (bindingDialog.etSizeY.text.toString()
                             .toInt() >= heightInitial
                     ) {
                         bindingDialog.etSizeY.error =
                             "Please choose smaller number under $heightInitial"
+                    } else if (bindingDialog.etSizeY.text.toString()
+                            .toInt() < 20
+                    ) {
+                        bindingDialog.etSizeY.error =
+                            "Please choose bigger number over 20"
                     } else {
                         heightFirst = bindingDialog.etSizeY.text.toString().toInt()
                         if (widthFirst <= widthInitial && heightFirst <= heightInitial) {
@@ -351,6 +370,11 @@ class MainActivity : AppCompatActivity() {
             .setView(bindingDialog.root)
             .setCancelable(true)
             .show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        dismissDialog()
     }
 
 }
