@@ -372,9 +372,14 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onSaveInstanceState(outState: Bundle) {
         dismissDialog()
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroy() {
+        dismissDialog()
+        super.onDestroy()
     }
 
 }
